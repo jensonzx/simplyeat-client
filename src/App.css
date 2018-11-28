@@ -1,0 +1,197 @@
+:root {
+  --footer-height: 0px;
+}
+
+html {
+  height: 100%;
+}
+
+.header {
+  flex: 0 0 auto;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: var(--footer-height);
+  background: #f9f9fb;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.App-navbar .App-navlink {
+  color: white;
+}
+
+.App-navbar .nav-item {
+  padding: 0 0.5rem;
+}
+
+.App-content {
+  flex: 1 0 auto;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.App-footer {
+  background-color: #313544;
+  justify-content: center;
+  display: flex;
+  padding: 1rem 1rem;
+}
+
+.App-footer span {
+  color: white;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#jumboheader {
+  background-color: #424959;
+}
+
+#jumboheader h1,
+#jumboheader p {
+  color: white;
+}
+
+.Home,
+.Login,
+.Food {
+  padding-bottom: 4rem;
+}
+
+.Home-jumbotron p,
+.fancy-font-1 {
+  font-family: 'Fira Sans', sans-serif;
+}
+
+.fancy-font-2 {
+  font-family: 'Oswald', sans-serif;
+}
+
+.Home-separator {
+  border-top-color: rgba(255, 255, 255, 0.25);
+}
+
+.Home-title {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 800;
+  font-size: 5rem;
+}
+
+p.Home-subtitle {
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: lighter;
+  font-size: 1.25rem;
+}
+
+.Login {
+  background: linear-gradient(
+      to right,
+      rgba(66, 73, 89, 0.72),
+      rgba(66, 73, 89, 0.72)
+    ),
+    url('https://image.ibb.co/hNmWPq/login-background.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.Login-title {
+  padding-top: 35px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 400;
+}
+
+.Login-header {
+  color: white;
+}
+
+.Login-form {
+  margin: 0 auto;
+}
+
+.Login-form-wrapper {
+  margin-top: 35px;
+}
+
+.Login-form-top {
+  padding: 25px 25px 25px 25px;
+  background: white;
+  border-radius: 4px 4px 0 0;
+  text-align: left;
+}
+
+.Login-form-bottom {
+  padding: 25px 40px 25px 40px;
+  background: #eef0eb;
+  border-radius: 0 0 4px 4px;
+}
+
+.Login-footer {
+  margin-top: 35px;
+}
+
+.Food {
+  margin-top: 2rem;
+}
+
+.Food-box {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #ffffff;
+  border: 1px solid #e1e1e1;
+  border-radius: 4px;
+}
+
+.Food-btn-checkbox,
+.Food-btn {
+  margin: 0.5rem 0.5rem;
+}
+.Food-btn-h {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.Food-btn-v {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.Food-find-btn-result {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.Food-locations {
+  max-height: 800px;
+  overflow-y: scroll;
+}
