@@ -148,10 +148,11 @@ class FindInput extends Component {
     const foods = this.state.foodList;
     const location = this.state.locationInput;
 
-    const foodName = foods.find(food => food.shortId === selectedFood).name;
+    const food = foods.find(food => food.shortId === selectedFood);
     // Submit data
     const formData = {
-      foodName: foodName,
+      foodId: selectedFood,
+      foodName: food.name,
       location: location
     };
 

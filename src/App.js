@@ -21,8 +21,10 @@ import './App.css';
 // Other components
 import Home from './Home';
 import Login from './Login';
+import Register from './Register';
 import Auth from './Modules/Auth';
 import Food from './Food/Food';
+import User from './User/User';
 
 class Footer extends Component {
   render() {
@@ -94,6 +96,14 @@ class App extends Component {
     isLoggedIn: false
   };
 
+  async componentDidMount() {
+    const authenticateResult = await Auth.reauthenticateUser();
+    if (authenticateResult) {
+      const { isLoggedIn, user } = authenticateResult;
+      this.updateAuthentication(isLoggedIn, user);
+    }
+  }
+
   /**
    * @param {Boolean} authenticated
    */
@@ -124,8 +134,20 @@ class App extends Component {
     );
   };
 
+  RegisterPage = props => {
+    return this.state.isLoggedIn ? (
+      <Redirect to="/" />
+    ) : (
+      <Register authUpdater={this.updateAuthentication} {...props} />
+    );
+  };
+
   FoodPage = props => {
     return <Food {...props} />;
+  };
+
+  UserPage = props => {
+    return this.state.isLoggedIn ? <Redirect to="/" /> : <User {...props} />;
   };
 
   render() {
@@ -151,6 +173,8 @@ class App extends Component {
               <Route path="/food" component={this.FoodPage} />
               <Route path="/login" component={this.LoginPage} />
               <Route path="/logout" component={this.LogOut} />
+              <Route path="/register" component={this.RegisterPage} />
+              <Route path="/user" component={this.UserPage} />
               <Route path="/404" component={this.NotFound} />
               <Redirect to="/404" />
             </Switch>

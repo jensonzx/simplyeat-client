@@ -85,7 +85,9 @@ html {
 
 .Home,
 .Login,
-.Food {
+.Food,
+.Register,
+.User {
   padding-bottom: 4rem;
 }
 
@@ -112,6 +114,18 @@ p.Home-subtitle {
   font-family: 'Fira Sans', sans-serif;
   font-weight: lighter;
   font-size: 1.25rem;
+}
+
+.Register {
+  background: linear-gradient(
+      to right,
+      rgba(66, 73, 89, 0.72),
+      rgba(66, 73, 89, 0.72)
+    ),
+    url('https://image.ibb.co/hNmWPq/login-background.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .Login {
@@ -165,7 +179,8 @@ p.Home-subtitle {
   margin-top: 2rem;
 }
 
-.Food-box {
+.Food-box,
+.User-box {
   margin: 1rem 0;
   padding: 1rem;
   background: #ffffff;

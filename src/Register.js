@@ -15,7 +15,7 @@ import {
 import Auth from './Modules/Auth';
 import LoadingModal from './Modules/Modal';
 
-class Login extends Component {
+class Register extends Component {
   state = {
     username: '',
     password: '',
@@ -46,7 +46,8 @@ class Login extends Component {
     if (!(username && password)) return;
 
     this.setState({ loading: true });
-    const result = await Auth.authenticateUser(username, password);
+    const result = await Auth.registerUser(username, password);
+    console.log(result);
     this.setState({ loading: false });
     if (result.error) {
       this.setState({ error: result.error });
@@ -62,14 +63,14 @@ class Login extends Component {
     const isPasswordEmpty = !password && submitted;
 
     return (
-      <div className="Login">
+      <div className="Register">
         <Container>
           <Row>
             <Col sm={{ size: 8, offset: 2 }} className="Login-header">
-              <h1 className="display-3 Login-title">LOGIN PAGE</h1>
+              <h1 className="display-3 Login-title">REGISTER</h1>
               <div>
                 <p className="lead">
-                  Login now to access features like save favourite food and
+                  Register now to access features like save favourite food and
                   locations to your own account!
                 </p>
               </div>
@@ -78,7 +79,7 @@ class Login extends Component {
           <Row>
             <Col sm={{ size: 6, offset: 3 }} className="Login-form-wrapper">
               <div className="Login-form-top">
-                <h3>Log In</h3>
+                <h3>Register</h3>
                 <p style={error ? { color: 'red' } : {}}>
                   {error ||
                     'Please enter your username or password to continue.'}
@@ -92,7 +93,7 @@ class Login extends Component {
                       bsSize="lg"
                       type="text"
                       name="username"
-                      id="loginUsername"
+                      id="registerUsername"
                       placeholder="Username"
                       onChange={this.handleChange}
                     />
@@ -106,7 +107,7 @@ class Login extends Component {
                       bsSize="lg"
                       type="password"
                       name="password"
-                      id="loginPassword"
+                      id="registerPassword"
                       placeholder="Password"
                       onChange={this.handleChange}
                     />
@@ -116,14 +117,10 @@ class Login extends Component {
                   </FormGroup>
                   <FormGroup row>
                     <Button color="primary" size="lg" block>
-                      Log In
+                      Register
                     </Button>
                   </FormGroup>
                 </Form>
-                <p>
-                  Don't have an account?&nbsp;
-                  <Link to="/register">Register now.</Link>
-                </p>
               </div>
             </Col>
           </Row>
@@ -134,4 +131,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default Register;

@@ -18,6 +18,40 @@ class Auth {
     return response.data;
   }
 
+  static async registerUser(username, password) {
+    try {
+      // TODO: Rework on the validation and add confirm password
+      let response;
+      try {
+        response = await axios.post(
+          url('/register'),
+          qs.stringify({ username: username, password: password })
+        );
+      } catch (error) {
+        const responseError = JSON.parse(error.request.response);
+        throw new Error(responseError.message);
+      }
+
+      const registerData = this.handleResponse(response);
+      if (registerData.error)
+        throw new Error(registerData.error.message || registerData.error);
+
+      const result = await this.authenticateUser(username, password);
+      const { user, error } = result;
+      if (error) throw new Error(error.message || error);
+      console.log(user);
+      return {
+        message: 'Registered successfully',
+        user: user
+      };
+    } catch (error) {
+      return {
+        message: 'Register failed.',
+        error: error.message
+      };
+    }
+  }
+
   static async authenticateUser(username, password) {
     try {
       let response;
@@ -57,6 +91,30 @@ class Auth {
   static setToken(token, user) {
     sessionStorage.setItem('token', token);
     sessionStorage.setItem('user', user);
+  }
+
+  static async reauthenticateUser() {
+    try {
+      if (!this.isUserAuthenticated()) return;
+      console.log('Token found, attempting to log in');
+
+      const savedToken = sessionStorage.getItem('token');
+      const response = await axios.get(url('/getuser'), {
+        headers: {
+          Authorization: `Bearer ${savedToken}`
+        }
+      });
+      if (response.status !== 200) return false;
+
+      console.log(response.data);
+      return {
+        isLoggedIn: true,
+        user: response.data.user
+      };
+    } catch (err) {
+      err.catch && err.catch(error => console.log(error));
+      return false;
+    }
   }
 
   /**

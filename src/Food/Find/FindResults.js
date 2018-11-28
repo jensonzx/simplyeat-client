@@ -18,6 +18,9 @@ import axios from 'axios';
 import config from '../../config';
 import LoadingModal from '../../Modules/Modal';
 
+import Auth from '../../Modules/Auth';
+import qs from 'querystring';
+
 import { Link } from 'react-router-dom';
 
 const url = config.server.url;
@@ -76,7 +79,6 @@ class FindResults extends Component {
 
   handleItemClick = e => {
     const locationId = e.target.name;
-    console.log(e.target);
     const location = this.state.locationList.find(
       location => location.place_id === locationId
     );
@@ -132,6 +134,7 @@ class FindResults extends Component {
         <LocationModal
           toggle={this.setViewMode}
           isOpen={this.state.viewMode}
+          {...this.props.prevFormData}
           {...selectedLocation}
         />
       </>
@@ -151,26 +154,107 @@ class LocationItem extends Component {
     } = this.props;
 
     return (
-      <ListGroupItem
-        name={place_id}
-        onClick={this.props.onClick}
-        tag="a"
-        action
-      >
+      <ListGroupItem tag="a" action>
         <ListGroupItemHeading>{name}</ListGroupItemHeading>
         <ListGroupItemText>{formatted_address}</ListGroupItemText>
-        <ListGroupItemText>Rating: {rating || 'N/A'}</ListGroupItemText>
+        <ListGroupItemText
+          tag="a"
+          href="#"
+          name={place_id}
+          onClick={this.props.onClick}
+        >
+          View Details
+        </ListGroupItemText>
       </ListGroupItem>
     );
   }
 }
 
 class LocationModal extends Component {
+  state = {
+    saved: false,
+    saving: false,
+    saveResult: ''
+  };
+
+  componentWillUnmount() {
+    this.setSaved(false, '');
+  }
+
   openNewTab = e => {
     const address = this.props.formatted_address;
-    const extUrl = `https://maps.google.com.my/?q=${address}`;
+    const name = this.props.name;
+    const extUrl = `https://maps.google.com.my/?q=${name} ${address}`;
 
     window.open(extUrl);
+  };
+
+  setSaving = isSaving => {
+    this.setState({
+      saving: isSaving
+    });
+  };
+
+  setSaved = (isSaved, message) => {
+    this.setState({
+      saved: isSaved,
+      saveResult: message
+    });
+  };
+
+  saveToFavourites = async () => {
+    this.setSaving(true);
+
+    // Save to favourite locations
+    const data = await this.saveLocation();
+    this.setSaving(false);
+    if (data.err) {
+      alert(data.err);
+    }
+
+    this.setSaved(true, data.message);
+    alert(data.message);
+  };
+
+  saveLocation = async () => {
+    try {
+      const {
+        location,
+        foodId,
+        place_id,
+        formatted_address,
+        geometry
+      } = this.props;
+      const token = Auth.getToken();
+      const body = {
+        foodId: foodId,
+        location: location,
+        placeId: place_id,
+        address: formatted_address,
+        lat: geometry.location.lat,
+        lng: geometry.location.lng
+      };
+      const response = await axios.post(
+        url('/place/saveplace'),
+        qs.stringify(body),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      if (response.status !== 200) throw response.data;
+
+      return response.data;
+    } catch (error) {
+      console.log(error.catch && error.catch(err => console.log(err)));
+      return { err: error.message };
+    }
+  };
+
+  onModalClose = () => {
+    this.props.toggle(false);
+    this.setSaved(false);
   };
 
   render() {
@@ -178,16 +262,34 @@ class LocationModal extends Component {
     const toggle = this.props.toggle;
 
     return (
-      <Modal isOpen={this.props.isOpen} centered>
-        <ModalHeader toggle={() => toggle(false)}>Location Details</ModalHeader>
+      <Modal size="lg" isOpen={this.props.isOpen} centered>
+        <ModalHeader toggle={this.onModalClose}>Location Details</ModalHeader>
         <ModalBody>
           <h5>{name}</h5>
           <p className="lead">{formatted_address}</p>
         </ModalBody>
         <ModalFooter>
-          <Button color="success" onClick={this.openNewTab}>
-            Open in Maps
-          </Button>
+          <div className="clearfix" style={{ width: '100%' }}>
+            <Button
+              className="float-left"
+              color="primary"
+              onClick={this.saveToFavourites}
+              disabled={this.state.saved !== this.state.saving}
+            >
+              {this.state.saved
+                ? 'Saved'
+                : this.state.saving
+                ? 'Saving'
+                : 'Save to Favourites'}
+            </Button>
+            <Button
+              color="success"
+              className="float-right"
+              onClick={this.openNewTab}
+            >
+              Open in Maps
+            </Button>
+          </div>
         </ModalFooter>
       </Modal>
     );
